@@ -131,7 +131,13 @@ CameraUI.prototype.startPreview = function(count, successCB, errorCB) {
 CameraUI.prototype.destroyPreview = function () {
     this.preview.pause();
     this.preview.src = null;
-    this._previewStream.stop();
+    if (this._previewStream.stop) {
+        this._previewStream.stop();
+    } else {
+        this._previewStream.getTracks().forEach(function(track) {
+            track.stop(); 
+        });
+    }
     this._previewStream = null;
     if (this.container) {
         document.body.removeChild(this.container);
